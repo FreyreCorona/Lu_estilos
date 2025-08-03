@@ -1,7 +1,6 @@
 APP_NAME=lu_api
 DOCKER_IMAGE=lu_api_img
 DOCKER_CONTAINER=lu_API
-DOCKER_COMPOSE=docker-compose
 PORT=8000
 
 build:
@@ -17,8 +16,8 @@ docker-run:
 	docker run -p $(PORT):$(PORT) $(DOCKER_IMAGE)
 
 up:
-	$(DOCKER_COMPOSE) up --build
+	docker-compose up --build
 
 down:
-	$(DOCKER_COMPOSE) down
+	docker-compose down
 
