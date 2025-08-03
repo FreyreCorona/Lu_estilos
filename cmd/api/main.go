@@ -4,17 +4,17 @@ import (
 	"log"
 	"net/http"
 	"os"
-
-	"github.com/FreyreCorona/Lu_estilos/api"
 )
+
+func routes(m *http.ServeMux) {
+	m.HandleFunc("GET /", Handle)
+}
 
 func main() {
 	Infolog := log.New(os.Stdout, "INFO: ", log.Ltime|log.Ldate)
 	Errorlog := log.New(os.Stdout, "ERROR: ", log.Ltime|log.Ldate|log.Lshortfile)
 	mux := http.NewServeMux()
-
-	mux.HandleFunc("/", api.Handle)
-
+	routes(mux)
 	server := http.Server{
 		Addr:     ":8000",
 		Handler:  mux,
