@@ -1,0 +1,6 @@
+.env
+.git/
+docker-compose.yml
+*.db
+*.log
+postgres_data
