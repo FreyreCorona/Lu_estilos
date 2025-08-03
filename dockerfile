@@ -9,12 +9,12 @@ COPY . .
 
 RUN go build -o lu_api ./cmd/api
 
-FROM golang:1.24-alpine
+FROM alpine:3.20
 
 WORKDIR /app
 
-COPY --from=builder /app/main .
+COPY --from=builder /app/lu_api .
 
 EXPOSE 8000
 
-CMD ["./main"]
+CMD ["./lu_api"]
