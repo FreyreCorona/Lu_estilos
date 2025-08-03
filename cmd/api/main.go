@@ -4,11 +4,14 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/FreyreCorona/Lu_estilos/internal/models"
 )
 
 type Application struct {
 	InfoLogger  *log.Logger
 	ErrorLogger *log.Logger
+	Clients     *models.ClietModel
 }
 
 func routes(m *http.ServeMux) {
