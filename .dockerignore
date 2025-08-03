@@ -3,4 +3,3 @@
 docker-compose.yml
 *.db
 *.log
-postgres_data
