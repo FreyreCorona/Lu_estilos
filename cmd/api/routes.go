@@ -9,12 +9,18 @@ import (
 
 func (app *application) routes() *httprouter.Router {
 	router := httprouter.New()
-
+	// general
 	router.HandlerFunc(http.MethodGet, "/", app.homeHandle)
+	// auth
 	router.HandlerFunc(http.MethodGet, "/auth/register", app.authRegister)
 	router.HandlerFunc(http.MethodGet, "/auth/login", app.authLogin)
 	router.HandlerFunc(http.MethodGet, "/auth/refresh", app.authRefresh)
-
+	// Clients
+	router.HandlerFunc(http.MethodGet, "/client/", app.getClients)
+	router.HandlerFunc(http.MethodGet, "/client/:id", app.getClienByID)
+	router.HandlerFunc(http.MethodPost, "/client/:id", app.postClient)
+	router.HandlerFunc(http.MethodPut, "/client/:id", app.putClient)
+	router.HandlerFunc(http.MethodDelete, "/client/:id", app.deleteClient)
 	return router
 }
 
