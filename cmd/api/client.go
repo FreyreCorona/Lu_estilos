@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/FreyreCorona/Lu_estilos/internal/models"
@@ -35,6 +37,22 @@ func (app *application) getClienByID(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) postClient(w http.ResponseWriter, r *http.Request) {
+	// Define a input struct with the expected data from the request
+	var input struct {
+		Name     string `json:"name"`
+		Email    string `json:"email"`
+		CPF      string `json:"cpf"`
+		Role     string `json:"role"`
+		Password string `json:"password"`
+	}
+	// try to decode te request on the addres of the input struct
+	err := json.NewDecoder(r.Body).Decode(&input)
+	if err != nil {
+		app.errorResponse(w, r, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
+	// show on screen
+	fmt.Fprintf(w, "%+v\n", input)
 }
 
 func (app *application) putClient(w http.ResponseWriter, r *http.Request) {

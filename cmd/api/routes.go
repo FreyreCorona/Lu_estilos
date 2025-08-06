@@ -19,6 +19,7 @@ func (app *application) routes() *httprouter.Router {
 	router.HandlerFunc(http.MethodGet, "/auth/register", app.authRegister)
 	router.HandlerFunc(http.MethodGet, "/auth/login", app.authLogin)
 	router.HandlerFunc(http.MethodGet, "/auth/refresh", app.authRefresh)
+	router.HandlerFunc(http.MethodPost, "/auth/logout", app.authLogout)
 	// Clients
 	router.HandlerFunc(http.MethodGet, "/client/", app.getClients)
 	router.HandlerFunc(http.MethodGet, "/client/:id", app.getClienByID)
