@@ -9,6 +9,10 @@ import (
 
 func (app *application) routes() *httprouter.Router {
 	router := httprouter.New()
+
+	router.NotFound = http.HandlerFunc(app.notFoundResponse)
+	router.MethodNotAllowed = http.HandlerFunc(app.methodNotAllowedResponse)
+
 	// general
 	router.HandlerFunc(http.MethodGet, "/", app.homeHandle)
 	// auth
@@ -33,6 +37,7 @@ func (app *application) routes() *httprouter.Router {
 	router.HandlerFunc(http.MethodPost, "/product/:id", app.postProduct)
 	router.HandlerFunc(http.MethodPut, "/product/:id", app.putProduct)
 	router.HandlerFunc(http.MethodDelete, "/product/:id", app.deleteProduct)
+
 	return router
 }
 
