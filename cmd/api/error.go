@@ -22,3 +22,7 @@ func (app *application) methodNotAllowedResponse(w http.ResponseWriter, r *http.
 	message := "the server could not support this method"
 	app.errorResponse(w, r, message, http.StatusMethodNotAllowed)
 }
+
+func (app *application) badRequestResponse(w http.ResponseWriter, r *http.Request, err error) {
+	app.errorResponse(w, r, err.Error(), http.StatusBadRequest)
+}

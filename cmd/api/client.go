@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -31,7 +30,7 @@ func (app *application) getClienByID(w http.ResponseWriter, r *http.Request) {
 	// show as JSON format
 	err = app.writeJSON(w, http.StatusOK, envelope{"client": client}, nil)
 	if err != nil {
-		app.errorResponse(w, r, "internal server error", http.StatusInternalServerError)
+		app.badRequestResponse(w, r, err)
 		return
 	}
 }
@@ -46,7 +45,7 @@ func (app *application) postClient(w http.ResponseWriter, r *http.Request) {
 		Password string `json:"password"`
 	}
 	// try to decode te request on the addres of the input struct
-	err := json.NewDecoder(r.Body).Decode(&input)
+	err := app.readJSON(w, r, input)
 	if err != nil {
 		app.errorResponse(w, r, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
