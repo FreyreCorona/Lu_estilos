@@ -4,10 +4,10 @@ import "database/sql"
 
 type Client struct {
 	Base
-	Email    string
-	CPF      string
-	Password string
-	Role     string
+	Email    string `json:"email"`
+	CPF      string `json:"cpf"`
+	Password string `json:"-"`
+	Role     string `json:"role"`
 }
 
 type ClietModel struct {
