@@ -3,7 +3,9 @@ package main
 import "net/http"
 
 func (app *application) errorResponse(w http.ResponseWriter, r *http.Request, message string, status int) {
+	// wraps the response
 	enve := envelope{"error": message}
+	// Write as JSON
 	err := app.writeJSON(w, status, enve, nil)
 	if err != nil {
 		app.InfoLogger.Println(err)

@@ -22,16 +22,18 @@ type application struct {
 
 func main() {
 	var cfg configuration
-
+	// set flago to custom port number
 	flag.IntVar(&cfg.port, "port", 4000, "Port listen number")
 	flag.Parse()
+
 	Infolog := log.New(os.Stdout, "", log.Ltime|log.Ldate)
 
+	// initialize application struct
 	app := application{
 		Config:     cfg,
 		InfoLogger: Infolog,
 	}
-
+	// initialize server struct
 	server := &http.Server{
 		Addr:         fmt.Sprintf(":%d", app.Config.port),
 		Handler:      app.routes(),

@@ -9,7 +9,7 @@ import (
 
 func (app *application) routes() *httprouter.Router {
 	router := httprouter.New()
-
+	// error
 	router.NotFound = http.HandlerFunc(app.notFoundResponse)
 	router.MethodNotAllowed = http.HandlerFunc(app.methodNotAllowedResponse)
 

@@ -10,3 +10,6 @@ func (app *application) authLogin(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) authRefresh(w http.ResponseWriter, r *http.Request) {
 }
+
+func (app *application) authLogout(w http.ResponseWriter, r *http.Request) {
+}

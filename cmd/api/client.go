@@ -10,12 +10,14 @@ func (app *application) getClients(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) getClienByID(w http.ResponseWriter, r *http.Request) {
+	// get the id from the URL
 	id, err := app.readParamID(r)
 	if err != nil {
 		app.InfoLogger.Println(err)
 		app.notFoundResponse(w, r)
 		return
 	}
+	// build the client data
 	client := models.Client{
 		ID:       id,
 		Name:     "Einier",
@@ -24,6 +26,7 @@ func (app *application) getClienByID(w http.ResponseWriter, r *http.Request) {
 		Role:     "user",
 		Password: "12345",
 	}
+	// show as JSON format
 	err = app.writeJSON(w, http.StatusOK, envelope{"client": client}, nil)
 	if err != nil {
 		app.errorResponse(w, r, "internal server error", http.StatusInternalServerError)
