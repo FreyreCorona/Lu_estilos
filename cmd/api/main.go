@@ -1,14 +1,15 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/FreyreCorona/Lu_estilos/internal/models"
+	"github.com/joho/godotenv"
 )
 
 type configuration struct {
@@ -22,9 +23,13 @@ type application struct {
 
 func main() {
 	var cfg configuration
-	// set flago to custom port number
-	flag.IntVar(&cfg.port, "port", 4000, "Port listen number")
-	flag.Parse()
+	// load the environment variables
+	godotenv.Load(".env")
+	port, err := strconv.Atoi(os.Getenv("API_PORT"))
+	if err != nil {
+		port = 4000
+	}
+	cfg.port = port
 
 	Infolog := log.New(os.Stdout, "", log.Ltime|log.Ldate)
 
