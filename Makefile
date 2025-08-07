@@ -1,7 +1,7 @@
 APP_NAME=lu_api
 DOCKER_IMAGE=lu_api_img
 DOCKER_CONTAINER=lu_API
-PORT=8000
+PORT=4000
 
 build:
 	go build -o $(APP_NAME) ./cmd/api

@@ -1,38 +1,63 @@
 package main
 
 import (
+	"context"
+	"database/sql"
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 	"time"
 
 	"github.com/FreyreCorona/Lu_estilos/internal/models"
-	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 )
 
 type configuration struct {
 	port int
+	db   struct {
+		dsn string
+	}
 }
+
 type application struct {
 	Config     configuration
 	InfoLogger *log.Logger
 	Clients    *models.ClietModel
 }
 
+func openDB(dsn string) (*sql.DB, error) {
+	db, err := sql.Open("postgres", dsn)
+	if err != nil {
+		return nil, err
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	err = db.PingContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return db, nil
+}
+
 func main() {
 	var cfg configuration
 	// load the environment variables
-	godotenv.Load(".env")
-	port, err := strconv.Atoi(os.Getenv("API_PORT"))
-	if err != nil {
-		port = 4000
-	}
-	cfg.port = port
+	flag.IntVar(&cfg.port, "port", 4000, "Port number")
+	flag.StringVar(&cfg.db.dsn, "dsn", "postgres://user:password@addres:port/db_name", "DSN for postgres database")
+
+	flag.Parse()
 
 	Infolog := log.New(os.Stdout, "", log.Ltime|log.Ldate)
 
+	db, err := openDB(cfg.db.dsn)
+	defer db.Close()
+
+	if err != nil {
+		Infolog.Fatal(err)
+	}
 	// initialize application struct
 	app := application{
 		Config:     cfg,
