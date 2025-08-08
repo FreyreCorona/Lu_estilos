@@ -99,6 +99,14 @@ func GetEnvInt(key string, dft int) int {
 	return value
 }
 
+func GetEnvStr(key string, dft string) string {
+	value, ok := os.LookupEnv(key)
+	if !ok {
+		return dft
+	}
+	return value
+}
+
 func openDB(dsn string) (*sql.DB, error) {
 	db, err := sql.Open("postgres", dsn)
 	if err != nil {

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -25,14 +24,11 @@ type application struct {
 }
 
 func main() {
+	// load the environment variables
 	cfg := configuration{
 		port: GetEnvInt("API_PORT", 4000),
 	}
-	// load the environment variables
-	flag.IntVar(&cfg.port, "port", GetEnvInt("API_PORT", 4000), "Port number")
-	flag.StringVar(&cfg.db.dsn, "dsn", os.Getenv("DSN"), "DSN for postgres database")
-
-	flag.Parse()
+	cfg.db.dsn = GetEnvStr("DSN", " ")
 
 	Infolog := log.New(os.Stdout, "", log.Ltime|log.Ldate)
 
