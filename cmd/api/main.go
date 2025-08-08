@@ -1,8 +1,6 @@
 package main
 
 import (
-	"context"
-	"database/sql"
 	"flag"
 	"fmt"
 	"log"
@@ -11,7 +9,6 @@ import (
 	"time"
 
 	"github.com/FreyreCorona/Lu_estilos/internal/models"
-	_ "github.com/lib/pq"
 )
 
 type configuration struct {
@@ -27,42 +24,34 @@ type application struct {
 	Clients    *models.ClietModel
 }
 
-func openDB(dsn string) (*sql.DB, error) {
-	db, err := sql.Open("postgres", dsn)
-	if err != nil {
-		return nil, err
-	}
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	err = db.PingContext(ctx)
-	if err != nil {
-		return nil, err
-	}
-	return db, nil
-}
-
 func main() {
-	var cfg configuration
+	cfg := configuration{
+		port: GetEnvInt("API_PORT", 4000),
+	}
 	// load the environment variables
-	flag.IntVar(&cfg.port, "port", 4000, "Port number")
-	flag.StringVar(&cfg.db.dsn, "dsn", "postgres://user:password@addres:port/db_name", "DSN for postgres database")
+	flag.IntVar(&cfg.port, "port", GetEnvInt("API_PORT", 4000), "Port number")
+	flag.StringVar(&cfg.db.dsn, "dsn", os.Getenv("DSN"), "DSN for postgres database")
 
 	flag.Parse()
 
 	Infolog := log.New(os.Stdout, "", log.Ltime|log.Ldate)
 
 	db, err := openDB(cfg.db.dsn)
+	if err != nil {
+		Infolog.Fatal(err)
+	}
 	defer db.Close()
 
 	if err != nil {
 		Infolog.Fatal(err)
 	}
+
 	// initialize application struct
 	app := application{
 		Config:     cfg,
 		InfoLogger: Infolog,
 	}
+
 	// initialize server struct
 	server := &http.Server{
 		Addr:         fmt.Sprintf(":%d", app.Config.port),
