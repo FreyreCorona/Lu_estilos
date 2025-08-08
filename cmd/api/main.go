@@ -24,10 +24,10 @@ type application struct {
 }
 
 func main() {
+	var cfg configuration
+
 	// load the environment variables
-	cfg := configuration{
-		port: GetEnvInt("API_PORT", 4000),
-	}
+	cfg.port = GetEnvInt("API_PORT", 4000)
 	cfg.db.dsn = GetEnvStr("DSN", " ")
 
 	Infolog := log.New(os.Stdout, "", log.Ltime|log.Ldate)
@@ -37,10 +37,6 @@ func main() {
 		Infolog.Fatal(err)
 	}
 	defer db.Close()
-
-	if err != nil {
-		Infolog.Fatal(err)
-	}
 
 	// initialize application struct
 	app := application{
@@ -57,6 +53,6 @@ func main() {
 		WriteTimeout: 10 * time.Second,
 	}
 
-	Infolog.Printf("Starting Server at %s ...\n", server.Addr)
-	log.Fatal(server.ListenAndServe())
+	Infolog.Printf("Starting Server at port: %s ...\n", server.Addr)
+	Infolog.Fatal(server.ListenAndServe())
 }

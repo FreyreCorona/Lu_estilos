@@ -1,3 +1,4 @@
+// Package models for hold the data types representation on the DB
 package models
 
 import "database/sql"
