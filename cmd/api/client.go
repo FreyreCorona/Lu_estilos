@@ -14,7 +14,7 @@ func (app *application) getClienByID(w http.ResponseWriter, r *http.Request) {
 	// get the id from the URL
 	id, err := app.readParamID(r)
 	if err != nil {
-		app.InfoLogger.Println(err)
+		app.Logger.Println(err)
 		app.notFoundResponse(w, r)
 		return
 	}

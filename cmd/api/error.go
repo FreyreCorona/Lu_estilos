@@ -8,7 +8,7 @@ func (app *application) errorResponse(w http.ResponseWriter, r *http.Request, me
 	// Write as JSON
 	err := app.writeJSON(w, status, enve, nil)
 	if err != nil {
-		app.InfoLogger.Println(err)
+		app.Logger.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
