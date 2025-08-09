@@ -138,7 +138,7 @@ func (app *application) ApplicateMigrations(sourceURL string) error {
 	err = migrator.Up()
 	if err == migrate.ErrNoChange {
 		return nil
-	} else {
+	} else if err != nil {
 		return err
 	}
 
