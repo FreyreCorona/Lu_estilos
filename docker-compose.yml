@@ -17,6 +17,7 @@ services:
 
   migrate:
     image: migrate/migrate
+    container_name: lu_migrations
     depends_on:
       - db
     env_file:
