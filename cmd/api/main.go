@@ -8,8 +8,6 @@ import (
 	"time"
 
 	"github.com/FreyreCorona/Lu_estilos/internal/models"
-
-	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
 type configuration struct {
@@ -45,10 +43,6 @@ func main() {
 		Config:  cfg,
 		Logger:  Infolog,
 		Clients: &models.ClietModel{DB: db},
-	}
-	err = app.ApplicateMigrations("file:///app/migrations")
-	if err != nil {
-		Infolog.Fatal(err)
 	}
 	// initialize server struct
 	server := &http.Server{

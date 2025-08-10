@@ -14,8 +14,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/golang-migrate/migrate/v4"
-	"github.com/golang-migrate/migrate/v4/database/postgres"
 	"github.com/julienschmidt/httprouter"
 	_ "github.com/lib/pq"
 )
@@ -122,26 +120,4 @@ func openDB(dsn string) (*sql.DB, error) {
 		return nil, err
 	}
 	return db, nil
-}
-
-func (app *application) ApplicateMigrations(sourceURL string) error {
-	migrationDriver, err := postgres.WithInstance(app.Clients.DB, &postgres.Config{})
-	if err != nil {
-		return err
-	}
-
-	migrator, err := migrate.NewWithDatabaseInstance(sourceURL, "postgres", migrationDriver)
-	if err != nil {
-		return err
-	}
-
-	err = migrator.Up()
-	if err == migrate.ErrNoChange {
-		return nil
-	} else if err != nil {
-		return err
-	}
-
-	app.Logger.Println("Migrations applied")
-	return nil
 }
