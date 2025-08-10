@@ -14,6 +14,5 @@ FROM alpine:3.22
 WORKDIR /app
 
 COPY --from=builder /app/lu_api .
-COPY --from=builder /app/migrations ./migrations
 
 CMD ["./lu_api"]
