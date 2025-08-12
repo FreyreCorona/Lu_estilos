@@ -7,7 +7,10 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-var ErrNoRecord = errors.New("no record founded")
+var (
+	ErrNoRecord     = errors.New("no record founded")
+	ErrDuplicateKey = errors.New("the email or cpf already exists")
+)
 
 type Models struct {
 	Clients ClientModel

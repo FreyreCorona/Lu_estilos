@@ -66,7 +66,12 @@ func (app *application) postClient(w http.ResponseWriter, r *http.Request) {
 	// insert on the database
 	err = app.Models.Clients.Insert(client)
 	if err != nil {
-		app.serverErrorResponse(w, r, err)
+		switch {
+		case errors.Is(err, models.ErrDuplicateKey):
+			app.badRequestResponse(w, r, err)
+		default:
+			app.serverErrorResponse(w, r, err)
+		}
 		return
 	}
 	client, err = app.Models.Clients.Get(client.ID)

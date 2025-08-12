@@ -6,6 +6,8 @@ import (
 	"database/sql"
 	"errors"
 	"time"
+
+	"github.com/lib/pq"
 )
 
 type Client struct {
@@ -13,7 +15,7 @@ type Client struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`
 	CPF      string `json:"cpf"`
-	Password string `json:"password"`
+	Password string `json:"-"`
 	Role     string `json:"role"`
 }
 
@@ -30,6 +32,10 @@ func (m *ClientModel) Insert(client *Client) error {
 	var id int64
 	err := m.DB.QueryRowContext(ctx, query, args...).Scan(&id)
 	if err != nil {
+		var pqErr *pq.Error
+		if errors.As(err, &pqErr) && pqErr.Code == "23505" {
+			return ErrDuplicateKey
+		}
 		return err
 	}
 	client.ID = id
