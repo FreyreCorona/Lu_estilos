@@ -89,14 +89,25 @@ func (m *ClientModel) Update(client *Client) error {
 }
 
 func (m *ClientModel) Delete(id int64) error {
-	query := "DELETE client WHERE id = $1"
+	if id < 1 {
+		return ErrNoRecord
+	}
+
+	query := "DELETE FROM client WHERE id = $1"
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	_, err := m.DB.ExecContext(ctx, query, id)
+	result, err := m.DB.ExecContext(ctx, query, id)
 	if err != nil {
 		return err
+	}
+	ra, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if ra == 0 {
+		return ErrNoRecord
 	}
 	return nil
 }
