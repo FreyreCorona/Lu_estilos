@@ -18,9 +18,9 @@ type configuration struct {
 }
 
 type application struct {
-	Config  configuration
-	Logger  *log.Logger
-	Clients *models.ClietModel
+	Config configuration
+	Logger *log.Logger
+	Models models.Models
 }
 
 func main() {
@@ -40,9 +40,9 @@ func main() {
 
 	// initialize application struct
 	app := application{
-		Config:  cfg,
-		Logger:  Infolog,
-		Clients: &models.ClietModel{DB: db},
+		Config: cfg,
+		Logger: Infolog,
+		Models: models.NewModels(db),
 	}
 	// initialize server struct
 	server := &http.Server{
