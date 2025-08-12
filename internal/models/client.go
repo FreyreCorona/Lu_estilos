@@ -74,3 +74,29 @@ func (m *ClientModel) Get(id int64) (*Client, error) {
 	}
 	return &client, nil
 }
+
+func (m *ClientModel) Update(client *Client) error {
+	query := "UPDATE clients SET name = $1, email = $2, cpf = $3, password = $4, role = $5 WHERE id = $6"
+	args := []any{client.Name, client.Email, client.CPF, client.Password, client.Role, client.ID}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	_, err := m.DB.ExecContext(ctx, query, args...)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *ClientModel) Delete(id int64) error {
+	query := "DELETE client WHERE id = $1"
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	_, err := m.DB.ExecContext(ctx, query, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
