@@ -48,6 +48,13 @@ func (app *application) postClient(w http.ResponseWriter, r *http.Request) {
 		app.badRequestResponse(w, r, err)
 		return
 	}
+	// hash the password
+	hashed, err := models.HashPassword(input.Password)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+	input.Password = hashed
 	// map the input fields to an client object
 	client := &models.Client{
 		Name:     input.Name,
@@ -58,6 +65,11 @@ func (app *application) postClient(w http.ResponseWriter, r *http.Request) {
 	}
 	// insert on the database
 	err = app.Models.Clients.Insert(client)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+	client, err = app.Models.Clients.Get(client.ID)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 		return

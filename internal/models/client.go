@@ -13,7 +13,7 @@ type Client struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`
 	CPF      string `json:"cpf"`
-	Password string `json:"-"`
+	Password string `json:"password"`
 	Role     string `json:"role"`
 }
 
@@ -22,23 +22,13 @@ type ClientModel struct {
 }
 
 func (m *ClientModel) Insert(client *Client) error {
-	query := "INSERT INTO clients  (name,email,cpf,password,role) VALUES ($1,$2,$3,$4,$5)"
-
-	hp, err := HashPassword(client.Password)
-	if err != nil {
-		return err
-	}
-
-	args := []any{client.Name, client.Email, client.CPF, hp, client.Role}
+	query := "INSERT INTO clients  (name,email,cpf,password,role) VALUES ($1,$2,$3,$4,$5) RETURNING id"
+	args := []any{client.Name, client.Email, client.CPF, client.Password, client.Role}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-
-	r, err := m.DB.ExecContext(ctx, query, args...)
-	if err != nil {
-		return err
-	}
-	id, err := r.LastInsertId()
+	var id int64
+	err := m.DB.QueryRowContext(ctx, query, args...).Scan(&id)
 	if err != nil {
 		return err
 	}
@@ -51,7 +41,7 @@ func (m *ClientModel) Get(id int64) (*Client, error) {
 		return nil, ErrNoRecord
 	}
 
-	query := "SELECT id,name,email,cpf,passowrd,role FROM clients WHERE id = $1"
+	query := "SELECT id,name,email,cpf,password,role FROM clients WHERE id = $1"
 	var client Client
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -93,7 +83,7 @@ func (m *ClientModel) Delete(id int64) error {
 		return ErrNoRecord
 	}
 
-	query := "DELETE FROM client WHERE id = $1"
+	query := "DELETE FROM clients WHERE id = $1"
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()

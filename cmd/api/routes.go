@@ -22,7 +22,7 @@ func (app *application) routes() *httprouter.Router {
 	router.HandlerFunc(http.MethodPost, "/auth/logout", app.authLogout)
 	// Clients
 	router.HandlerFunc(http.MethodGet, "/client/:id", app.getClienByID)
-	router.HandlerFunc(http.MethodPost, "/client/:id", app.postClient)
+	router.HandlerFunc(http.MethodPost, "/client", app.postClient)
 	router.HandlerFunc(http.MethodPatch, "/client/:id", app.putClient)
 	router.HandlerFunc(http.MethodDelete, "/client/:id", app.deleteClient)
 	// Orders
