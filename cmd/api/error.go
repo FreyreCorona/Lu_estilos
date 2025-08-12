@@ -26,3 +26,8 @@ func (app *application) methodNotAllowedResponse(w http.ResponseWriter, r *http.
 func (app *application) badRequestResponse(w http.ResponseWriter, r *http.Request, err error) {
 	app.errorResponse(w, r, err.Error(), http.StatusBadRequest)
 }
+
+func (app *application) serverErrorResponse(w http.ResponseWriter, r *http.Request, err error) {
+	app.Logger.Println(err)
+	app.errorResponse(w, r, "sorry , we cannot process your recuest due an internal error", http.StatusInternalServerError)
+}

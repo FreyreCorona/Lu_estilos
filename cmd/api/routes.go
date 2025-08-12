@@ -21,10 +21,9 @@ func (app *application) routes() *httprouter.Router {
 	router.HandlerFunc(http.MethodGet, "/auth/refresh", app.authRefresh)
 	router.HandlerFunc(http.MethodPost, "/auth/logout", app.authLogout)
 	// Clients
-	router.HandlerFunc(http.MethodGet, "/client/", app.getClients)
 	router.HandlerFunc(http.MethodGet, "/client/:id", app.getClienByID)
 	router.HandlerFunc(http.MethodPost, "/client/:id", app.postClient)
-	router.HandlerFunc(http.MethodPut, "/client/:id", app.putClient)
+	router.HandlerFunc(http.MethodPatch, "/client/:id", app.putClient)
 	router.HandlerFunc(http.MethodDelete, "/client/:id", app.deleteClient)
 	// Orders
 	router.HandlerFunc(http.MethodGet, "/order/", app.getOrders)

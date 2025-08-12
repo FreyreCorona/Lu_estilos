@@ -22,14 +22,14 @@ type ClientModel struct {
 }
 
 func (m *ClientModel) Insert(client *Client) error {
-	query := "INSERT INTO clients  (id,name,email,cpf,password,role) VALUES ($1,$2,$3,$4,$5,$6)"
+	query := "INSERT INTO clients  (name,email,cpf,password,role) VALUES ($1,$2,$3,$4,$5)"
 
 	hp, err := HashPassword(client.Password)
 	if err != nil {
 		return err
 	}
 
-	args := []any{client.ID, client.Name, client.Email, client.CPF, hp, client.Role}
+	args := []any{client.Name, client.Email, client.CPF, hp, client.Role}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
