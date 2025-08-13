@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS products_images (
+  id BIGSERIAL PRIMARY KEY,
+  product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+  url TEXT NOT NULL,
+  position SMALLINT CHECK ( position BETWEEN 1 AND 3 )
+);

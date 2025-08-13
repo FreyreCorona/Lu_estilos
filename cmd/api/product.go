@@ -2,9 +2,6 @@ package main
 
 import "net/http"
 
-func (app *application) getProducts(w http.ResponseWriter, r *http.Request) {
-}
-
 func (app *application) getProductByID(w http.ResponseWriter, r *http.Request) {
 }
 
