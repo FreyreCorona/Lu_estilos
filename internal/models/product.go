@@ -1,6 +1,7 @@
 package models
 
 import (
+	"context"
 	"database/sql"
 	"time"
 )
@@ -29,14 +30,35 @@ type ProductModel struct {
 	DB *sql.DB
 }
 
-func (p *ProductModel) Insert(p *Product) error {
+func (m *ProductModel) Insert(p *Product) error {
 }
 
-func (p *ProductModel) Get(id int64) (*Product, error) {
+func (m *ProductModel) Get(id int64) (*Product, error) {
 }
 
-func (p *ProductModel) Update(p *Product) error {
+func (m *ProductModel) Update(p *Product) error {
 }
 
-func (p *ProductModel) Delete(id int64) error {
+func (m *ProductModel) Delete(id int64) error {
+	if id < 1 {
+		return ErrNoRecord
+	}
+
+	query := "DELETE FROM products WHERE id = $1"
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	result, err := m.DB.ExecContext(ctx, query, id)
+	if err != nil {
+		return err
+	}
+	ra, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if ra == 0 {
+		return ErrNoRecord
+	}
+	return nil
 }
