@@ -37,10 +37,12 @@ func (m *ProductModel) Insert(product *Product) error {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+
 	err := m.DB.QueryRowContext(ctx, query, args...).Scan(&product.ID)
 	if err != nil {
 		return err
 	}
+
 	for _, image := range product.Images {
 		_, err := m.DB.ExecContext(ctx, "INSTERT INTO product_images (product_id,url,position) VALUES ($1,$2,$3); ", product.ID, image.URL, image.Position)
 		if err != nil {

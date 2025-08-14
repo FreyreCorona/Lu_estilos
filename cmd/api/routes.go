@@ -34,7 +34,7 @@ func (app *application) routes() *httprouter.Router {
 	// Product
 	router.HandlerFunc(http.MethodGet, "/product/:id", app.getProductByID)
 	router.HandlerFunc(http.MethodPost, "/product/:id", app.postProduct)
-	router.HandlerFunc(http.MethodPut, "/product/:id", app.putProduct)
+	router.HandlerFunc(http.MethodPatch, "/product/:id", app.putProduct)
 	router.HandlerFunc(http.MethodDelete, "/product/:id", app.deleteProduct)
 
 	return router
