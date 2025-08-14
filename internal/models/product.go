@@ -3,6 +3,7 @@ package models
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"time"
 )
 
@@ -51,8 +52,38 @@ func (m *ProductModel) Insert(product *Product) error {
 
 func (m *ProductModel) Get(id int64) (*Product, error) {
 	if id < 1 {
-		return ErrNoRecord
+		return nil, ErrNoRecord
 	}
+	query := "SELECT p.id,p.name,p.description,p.bar_code,p.category,p.initial_stock,p.actual_stock,p.price,p.due_date,i.id,i.product_id,i.url,i.position FROM products p LEFT JOIN product_images i ON p.id = i.product_id WHERE id = $1 ORDER BY i.position;"
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	result, err := m.DB.QueryContext(ctx, query, id)
+	defer result.Close()
+
+	if err != nil {
+		switch {
+		case errors.As(err, sql.ErrNoRows):
+			return nil, ErrNoRecord
+		default:
+			return nil, err
+		}
+	}
+
+	var product Product
+	for result.Next() {
+		image := new(ProductImage)
+		err := result.Scan(&product.ID, &product.Name, &product.Description, &product.BarCode, &product.Category, &product.InitialStock, &product.ActualStock, &product.Price, &product.DueDate, &image.ID, &image.ProductID, &image.URL, &image.Position)
+		if err != nil {
+			return nil, err
+		}
+		if image.ID != nil {
+			product.Images = append(product.Images, image)
+		}
+	}
+
+	return &product, nil
 }
 
 func (m *ProductModel) Update(p *Product) error {
