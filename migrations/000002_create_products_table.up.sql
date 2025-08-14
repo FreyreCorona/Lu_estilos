@@ -7,5 +7,5 @@ CREATE TABLE IF NOT EXISTS products (
   initial_stock INTEGER NOT NULL DEFAULT 0,
   actual_stock INTEGER NOT NULL DEFAULT 0,
   price NUMERIC(10,2) NOT NULL,
-  due_date TIMESTAMP DEFAULT NOW(),
+  due_date TIMESTAMP DEFAULT NOW()
 );

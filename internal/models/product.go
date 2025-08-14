@@ -44,7 +44,7 @@ func (m *ProductModel) Insert(product *Product) error {
 	}
 
 	for _, image := range product.Images {
-		_, err := m.DB.ExecContext(ctx, "INSTERT INTO product_images (product_id,url,position) VALUES ($1,$2,$3); ", product.ID, image.URL, image.Position)
+		_, err := m.DB.ExecContext(ctx, "INSERT INTO products_images (product_id,url,position) VALUES ($1,$2,$3); ", product.ID, image.URL, image.Position)
 		if err != nil {
 			return err
 		}
@@ -56,7 +56,7 @@ func (m *ProductModel) Get(id int64) (*Product, error) {
 	if id < 1 {
 		return nil, ErrNoRecord
 	}
-	query := "SELECT p.id,p.name,p.description,p.bar_code,p.category,p.initial_stock,p.actual_stock,p.price,p.due_date,i.id,i.product_id,i.url,i.position FROM products p LEFT JOIN product_images i ON p.id = i.product_id WHERE id = $1 ORDER BY i.position;"
+	query := "SELECT p.id,p.name,p.description,p.bar_code,p.category,p.initial_stock,p.actual_stock,p.price,p.due_date,i.id,i.product_id,i.url,i.position FROM products p LEFT JOIN products_images i ON p.id = i.product_id WHERE p.id = $1 ORDER BY i.position;"
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
