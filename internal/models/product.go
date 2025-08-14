@@ -60,16 +60,15 @@ func (m *ProductModel) Get(id int64) (*Product, error) {
 	defer cancel()
 
 	result, err := m.DB.QueryContext(ctx, query, id)
-	defer result.Close()
-
 	if err != nil {
 		switch {
-		case errors.As(err, sql.ErrNoRows):
+		case errors.Is(err, sql.ErrNoRows):
 			return nil, ErrNoRecord
 		default:
 			return nil, err
 		}
 	}
+	defer result.Close()
 
 	var product Product
 	for result.Next() {
