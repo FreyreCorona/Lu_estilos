@@ -86,7 +86,18 @@ func (m *ProductModel) Get(id int64) (*Product, error) {
 	return &product, nil
 }
 
-func (m *ProductModel) Update(p *Product) error {
+func (m *ProductModel) Update(product *Product) error {
+	query := "UPDATE products SET name=$1, description=$2, bar_code=$3, category=$4, initial_stock=$5, actual_stock=$6, price=$7, due_date=$8 WHERE id = $9"
+	args := []any{product.Name, product.Description, product.BarCode, product.Category, product.InitialStock, product.ActualStock, product.Price, product.DueDate, product.ID}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	_, err := m.DB.ExecContext(ctx, query, args...)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (m *ProductModel) Delete(id int64) error {
