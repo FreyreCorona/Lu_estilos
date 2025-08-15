@@ -105,15 +105,15 @@ func (app *application) putProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var input struct {
-		Name         *string                `json:"name"`
-		Description  *string                `json:"description,omitempty"`
-		BarCode      *string                `json:"bar_code,omitempty"`
-		Category     *string                `json:"category,omitempty"`
-		InitialStock *int32                 `json:"initial_stock"`
-		ActualStock  *int32                 `json:"actual_stock"`
-		Price        *float64               `json:"price"`
-		DueDate      *time.Time             `json:"due_date,omitempty"`
-		Images       []*models.ProductImage `json:"images,omitempty"`
+		Name         *string
+		Description  *string
+		BarCode      *string
+		Category     *string
+		InitialStock *int32
+		ActualStock  *int32
+		Price        *float64
+		DueDate      *time.Time
+		Images       []*models.ProductImage
 	}
 	err = app.readJSON(w, r, &input)
 	if err != nil {
@@ -121,6 +121,34 @@ func (app *application) putProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// start validating if are nil for assignment
+	if input.Name != nil {
+		product.Name = *input.Name
+	}
+	if input.Description != nil {
+		product.Description = input.Description
+	}
+	if input.BarCode != nil {
+		product.BarCode = input.BarCode
+	}
+	if input.Category != nil {
+		product.Category = input.Category
+	}
+	if input.InitialStock != nil {
+		product.InitialStock = *input.InitialStock
+	}
+	if input.ActualStock != nil {
+		product.ActualStock = *input.ActualStock
+	}
+	if input.Price != nil {
+		product.Price = *input.Price
+	}
+	if input.DueDate != nil {
+		product.DueDate = input.DueDate
+	}
+	if input.Images != nil {
+		product.Images = input.Images
+	}
+
 	err = app.writeJSON(w, http.StatusOK, envelope{"product": product}, nil)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
