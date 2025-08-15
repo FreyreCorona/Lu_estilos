@@ -82,6 +82,7 @@ func (m *ProductModel) Get(id int64) (*Product, error) {
 	if !flag {
 		return nil, ErrNoRecord
 	}
+
 	return &product, nil
 }
 
