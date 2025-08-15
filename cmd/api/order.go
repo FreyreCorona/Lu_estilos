@@ -2,9 +2,6 @@ package main
 
 import "net/http"
 
-func (app *application) getOrders(w http.ResponseWriter, r *http.Request) {
-}
-
 func (app *application) getOrderByID(w http.ResponseWriter, r *http.Request) {
 }
 
