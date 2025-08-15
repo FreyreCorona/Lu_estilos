@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS orders (
+  id BIGSERIAL PRIMARY KEY,
+  created_at TIMESTAMP DEFAULT NOW(),
+  status TEXT NOT NULL,
+  client_id BIGINT NOT NULL REFERENCES clients(id)
+);
