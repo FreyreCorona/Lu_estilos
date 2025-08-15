@@ -3,7 +3,6 @@ package models
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"time"
 )
 
@@ -63,17 +62,14 @@ func (m *ProductModel) Get(id int64) (*Product, error) {
 
 	result, err := m.DB.QueryContext(ctx, query, id)
 	if err != nil {
-		switch {
-		case errors.Is(err, sql.ErrNoRows):
-			return nil, ErrNoRecord
-		default:
-			return nil, err
-		}
+		return nil, err
 	}
 	defer result.Close()
 
 	var product Product
+	flag := false
 	for result.Next() {
+		flag = true
 		image := new(ProductImage)
 		err := result.Scan(&product.ID, &product.Name, &product.Description, &product.BarCode, &product.Category, &product.InitialStock, &product.ActualStock, &product.Price, &product.DueDate, &image.ID, &image.ProductID, &image.URL, &image.Position)
 		if err != nil {
@@ -83,7 +79,9 @@ func (m *ProductModel) Get(id int64) (*Product, error) {
 			product.Images = append(product.Images, image)
 		}
 	}
-
+	if !flag {
+		return nil, ErrNoRecord
+	}
 	return &product, nil
 }
 
